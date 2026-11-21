@@ -1,0 +1,41 @@
+{
+  "name": "ts3-compat",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Server-compatible TeamSpeak 3 client: Node.js protocol backend + Fluent web UI",
+  "scripts": {
+    "test": "node test/handshake.test.js",
+    "start": "node server/app.js",
+    "test:handshake": "node test/handshake.test.js",
+    "test:client": "node test/client-cli.js",
+    "test:voice": "node test/voice.test.js"
+  },
+  "dependencies": {
+    "ws": "^8.23.0"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wanwen371/ts3-compat.git"
+  },
+  "homepage": "https://github.com/wanwen371/ts3-compat#readme",
+  "bugs": {
+    "url": "https://github.com/wanwen371/ts3-compat/issues"
+  },
+  "keywords": [
+    "teamspeak",
+    "teamspeak3",
+    "voip",
+    "opus",
+    "webaudio",
+    "webcodecs",
+    "websocket",
+    "reverse-engineering",
+    "fluent",
+    "fluent-design"
+  ]
+}

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  protocol:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Syntax check (server, web, tests)
+        run: |
+          set -euo pipefail
+          for f in server/app.js server/ts3/*.js web/*.js test/*.js test/*.mjs; do
+            node --check "$f"
+          done
+
+      - name: Offline protocol unit tests (crypto / INIT1 layout / framing / commands)
+        run: node test/handshake.test.js

@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# local test server (official TeamSpeak 3 Server binaries, licences and DB —
+# never commit: it carries the local serveradmin password / privilege key)
+ts3server-test/
+
+# runtime output
+*.log
+logs/
+/data/
+*.sqlite
+*.db
+tmp/
+.DS_Store
+Thumbs.db
+
+# but keep the real-client handshake capture used as test ground truth
+!test/capture/*.log

@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#0078d4">
+  <title>TeamSpeak 3 兼容客户端 · Fluent</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230078d4'/%3E%3Cpath d='M7 18h3l2-6 3 12 3-9 2 5h5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <!-- 线性 1.5px 描边图标集：全部内联，无外部依赖 -->
+  <svg class="icon-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 12h2l2-6 3 12 3-9 2 5h5"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-collapse" viewBox="0 0 24 24"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></symbol>
+    <symbol id="i-hash" viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 4L8 20M16 4l-2 16"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L3.6 9.8l6.5-.9z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></symbol>
+    <symbol id="i-mic-off" viewBox="0 0 24 24"><path d="M9 6a3 3 0 0 1 6 0v5M9 9v3a3 3 0 0 0 4.6 2.6"/><path d="M5 11a7 7 0 0 0 10.4 6.2M19 11a7 7 0 0 1-.3 2"/><path d="M12 18v3M8 21h8M3 3l18 18"/></symbol>
+    <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><path d="M4 14h3v6H6a2 2 0 0 1-2-2zM20 14h-3v6h1a2 2 0 0 0 2-2z"/></symbol>
+    <symbol id="i-headphones-off" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 12.9-6.4M20 12v4M4 14h3v6H6a2 2 0 0 1-2-2zM17 20h-1v-6h4v4"/><path d="M3 3l18 18"/></symbol>
+    <symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6M3.5 9a9 9 0 0 1 14.9-3.4L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-login" viewBox="0 0 24 24"><path d="M15 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4"/><path d="M10 17l5-5-5-5M15 12H3"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 7V3M15 7V3M6 7h12v3a6 6 0 0 1-12 0zM12 16v5"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v8M6.3 6.3a8 8 0 1 0 11.4 0"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+  </svg>
+
+  <!-- Toast 通知区（Acrylic Flyout） -->
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ===================== 连接页 ===================== -->
+  <section class="view view--connect is-active" id="view-connect" aria-labelledby="connect-title">
+    <div class="connect">
+      <div class="connect__brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg class="icon icon--xl"><use href="#i-wave"></use></svg>
+        </div>
+        <div class="connect__brand-text">
+          <p class="connect__eyebrow">FLUENT · TEAMSPEAK 3 COMPAT</p>
+          <h1 class="connect__product">语音客户端</h1>
+        </div>
+      </div>
+
+      <div class="card card--connect">
+        <div class="connect__heading">
+          <h2 class="connect__title" id="connect-title">连接到服务器</h2>
+          <p class="connect__desc">通过本地 WebSocket 桥接建立 TeamSpeak 3 会话。没有后端时，可用内置演示数据预览完整界面。</p>
+        </div>
+
+        <form class="connect__form" id="connect-form" novalidate>
+          <div class="form-row form-row--host">
+            <div class="field">
+              <label class="field__label" for="connect-host">服务器地址</label>
+              <div class="input-shell">
+                <input class="input" id="connect-host" name="host" type="text" value="127.0.0.1" autocomplete="off" spellcheck="false" placeholder="127.0.0.1" required>
+              </div>
+            </div>
+            <div class="field field--port">
+              <label class="field__label" for="connect-port">端口</label>
+              <div class="input-shell">
+                <input class="input" id="connect-port" name="port" type="text" inputmode="numeric" value="9987" autocomplete="off" placeholder="9987">
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="connect-nickname">昵称</label>
+            <div class="input-shell">
+              <input class="input" id="connect-nickname" name="nickname" type="text" value="网页用户" maxlength="30" autocomplete="nickname">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="connect-password">服务器密码 <span class="field__optional">可选</span></label>
+            <div class="input-shell input-shell--action">
+              <input class="input" id="connect-password" name="password" type="password" autocomplete="current-password" placeholder="服务器未设置密码时留空">
+              <button type="button" class="input-addon" id="btn-password-toggle" aria-label="显示密码" aria-pressed="false" title="显示密码">
+                <svg class="icon" aria-hidden="true"><use href="#i-eye"></use></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="connect__status" id="connect-status" role="status" aria-live="polite" data-tone="idle">
+            <span class="connect__status-dot" aria-hidden="true"></span>
+            <span class="connect__status-text" id="connect-status-text">等待连接</span>
+          </div>
+
+          <div class="connect__actions">
+            <button type="submit" class="btn btn--primary btn--block" id="btn-connect">
+              <svg class="icon" aria-hidden="true"><use href="#i-plug"></use></svg>
+              <span id="btn-connect-label">连接</span>
+            </button>
+            <button type="button" class="btn btn--ghost btn--block" id="btn-demo">以演示数据浏览界面</button>
+          </div>
+        </form>
+      </div>
+
+      <p class="connect__footnote">设置保存在本机 · 音频由浏览器 WebCodecs / Web Audio 处理 · 无第三方库、无 CDN</p>
+    </div>
+  </section>
+
+  <!-- ===================== 主界面 ===================== -->
+  <section class="view view--main" id="view-main" hidden aria-labelledby="server-name">
+    <h1 class="sr-only">TeamSpeak 3 语音客户端主界面</h1>
+
+    <header class="serverbar card--surface" aria-label="服务器信息">
+      <div class="serverbar__mark" aria-hidden="true">
+        <svg class="icon icon--lg"><use href="#i-wave"></use></svg>
+      </div>
+      <div class="serverbar__identity">
+        <div class="serverbar__title-row">
+          <h2 class="serverbar__title" id="server-name">未连接</h2>
+          <span class="badge badge--neutral" id="server-mode-badge" hidden>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-info"></use></svg>演示数据
+          </span>
+        </div>
+        <p class="serverbar__meta" id="server-meta">等待服务器信息…</p>
+      </div>
+      <div class="serverbar__badges" id="server-badges" aria-live="polite"></div>
+      <div class="serverbar__actions">
+        <button type="button" class="icon-btn" id="btn-open-settings" aria-label="打开设置" title="设置">
+          <svg class="icon icon--lg" aria-hidden="true"><use href="#i-gear"></use></svg>
+        </button>
+        <button type="button" class="btn btn--secondary" id="btn-disconnect" title="断开当前服务器会话">
+          <svg class="icon" aria-hidden="true"><use href="#i-power"></use></svg>
+          断开
+        </button>
+      </div>
+    </header>
+
+    <div class="toolbar card--surface" role="toolbar" aria-label="连接与语音工具栏">
+      <div class="toolbar__group">
+        <button type="button" class="btn btn--secondary" id="btn-connect-toolbar" disabled title="当前已连接">
+          <svg class="icon" aria-hidden="true"><use href="#i-plug"></use></svg>
+          连接
+        </button>
+        <button type="button" class="btn btn--secondary" id="btn-disconnect-toolbar" title="断开当前连接">
+          <svg class="icon" aria-hidden="true"><use href="#i-power"></use></svg>
+          断开
+        </button>
+        <span class="toolbar__sep" aria-hidden="true"></span>
+        <button type="button" class="btn btn--secondary" id="btn-join" disabled title="先选择一个频道">
+          <svg class="icon" aria-hidden="true"><use href="#i-login"></use></svg>
+          加入频道
+        </button>
+        <span class="toolbar__selected" id="toolbar-selected" aria-live="polite">未选择频道</span>
+      </div>
+
+      <span class="toolbar__spacer"></span>
+
+      <div class="toolbar__group">
+        <button type="button" class="btn btn--toggle" id="btn-mute" aria-pressed="false" title="切换麦克风静音">
+          <svg class="icon" aria-hidden="true"><use href="#i-mic"></use></svg>
+          <span id="btn-mute-label">静音</span>
+        </button>
+        <button type="button" class="btn btn--toggle" id="btn-deafen" aria-pressed="false" title="切换耳机静音（耳聋）">
+          <svg class="icon" aria-hidden="true"><use href="#i-headphones"></use></svg>
+          <span id="btn-deafen-label">耳聋</span>
+        </button>
+        <button type="button" class="btn btn--toggle btn--ptt" id="btn-ptt" aria-pressed="false" title="按住说话（也可按住快捷键）">
+          <svg class="icon" aria-hidden="true"><use href="#i-radio"></use></svg>
+          <span id="btn-ptt-label">按住说话</span>
+        </button>
+        <span class="toolbar__sep" aria-hidden="true"></span>
+        <button type="button" class="btn btn--secondary" id="btn-voice-target" aria-haspopup="menu" aria-expanded="false" aria-controls="menu" title="选择语音发送目标">
+          <svg class="icon" aria-hidden="true"><use href="#i-target"></use></svg>
+          <span class="toolbar__label" id="voice-target-label">语音目标 · 当前频道</span>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+        </button>
+      </div>
+    </div>
+
+    <main class="workspace" id="main-content" tabindex="-1">
+      <aside class="panel panel--channels" aria-labelledby="channels-heading">
+        <div class="panel__head">
+          <h2 class="panel__eyebrow" id="channels-heading">频道</h2>
+          <span class="count-pill" id="channels-count">0</span>
+          <span class="panel__hint">双击加入</span>
+          <button type="button" class="icon-btn panel__action" id="btn-collapse-channels" aria-label="全部折叠频道" title="全部折叠">
+            <svg class="icon" aria-hidden="true"><use href="#i-collapse"></use></svg>
+          </button>
+        </div>
+        <div class="panel__body">
+          <ul class="tree" id="channel-tree" role="tree" aria-label="频道树" aria-busy="false"></ul>
+          <div class="panel-state" id="channels-state" hidden></div>
+        </div>
+      </aside>
+
+      <div class="workspace__right">
+        <section class="panel panel--clients" aria-labelledby="clients-heading">
+          <div class="panel__head">
+            <h2 class="panel__eyebrow" id="clients-heading">在线客户端</h2>
+            <span class="count-pill" id="clients-count">0</span>
+            <span class="panel__hint">右键查看操作</span>
+          </div>
+          <div class="panel__body">
+            <ul class="clients" id="client-list" role="list" aria-label="在线客户端列表" aria-busy="false"></ul>
+            <div class="panel-state" id="clients-state" hidden></div>
+          </div>
+        </section>
+
+        <section class="panel panel--chat" aria-labelledby="chat-heading">
+          <div class="panel__head panel__head--chat">
+            <h2 class="panel__eyebrow" id="chat-heading">频道聊天</h2>
+            <span class="panel__context" id="chat-channel-name">未加入频道</span>
+            <span class="badge badge--neutral" id="chat-lock-badge" hidden>
+              <svg class="icon icon--sm" aria-hidden="true"><use href="#i-lock"></use></svg>加密
+            </span>
+          </div>
+          <div class="chat-wrap">
+            <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="聊天消息"></div>
+          </div>
+          <form class="chat-composer" id="chat-form" novalidate>
+            <label class="sr-only" for="chat-input">消息内容</label>
+            <div class="input-shell chat-composer__input">
+              <input class="input" id="chat-input" type="text" autocomplete="off" maxlength="4096" placeholder="选择频道后开始聊天" disabled>
+              <span class="chat-composer__hint" id="chat-hint">Enter 发送</span>
+            </div>
+            <button type="submit" class="btn btn--primary btn--send" id="btn-send" disabled aria-label="发送消息" title="发送消息">
+              <svg class="icon" aria-hidden="true"><use href="#i-send"></use></svg>
+            </button>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <footer class="statusbar card--surface" aria-label="连接状态栏">
+      <span class="statusbar__item">
+        <span class="status-dot" id="status-dot" data-state="idle" aria-hidden="true"></span>
+        <span class="statusbar__text" id="status-text">未连接</span>
+      </span>
+      <span class="statusbar__item statusbar__item--num">Ping <b id="stat-ping">—</b> ms</span>
+      <span class="statusbar__item statusbar__item--num">丢包 <b id="stat-loss">—</b></span>
+      <span class="statusbar__item statusbar__item--num">↑ <b id="stat-sent">0 B</b></span>
+      <span class="statusbar__item statusbar__item--num">↓ <b id="stat-recv">0 B</b></span>
+      <span class="statusbar__spacer"></span>
+      <button type="button" class="statusbar__link" id="audio-status" title="打开音频设置">音频 未初始化</button>
+      <span class="badge badge--neutral" id="mock-badge" hidden>
+        <svg class="icon icon--sm" aria-hidden="true"><use href="#i-info"></use></svg>演示数据
+      </span>
+      <span class="statusbar__item statusbar__host" id="status-host">本地桥接</span>
+    </footer>
+  </section>
+
+  <!-- ===================== 设置页 ===================== -->
+  <section class="view view--settings" id="view-settings" hidden aria-labelledby="settings-title">
+    <header class="pagehead">
+      <button type="button" class="btn btn--secondary" id="btn-settings-back">
+        <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"></use></svg>
+        返回
+      </button>
+      <div class="pagehead__text">
+        <h1 class="pagehead__title" id="settings-title" tabindex="-1">设置</h1>
+        <p class="pagehead__desc">音频、播放与快捷键 · 所有设置立即生效并保存在本机</p>
+      </div>
+      <span class="pagehead__spacer"></span>
+      <span class="badge badge--neutral" id="settings-mock-badge" hidden>
+        <svg class="icon icon--sm" aria-hidden="true"><use href="#i-info"></use></svg>演示数据
+      </span>
+    </header>
+
+    <div class="settings-layout">
+      <nav class="settings-nav" aria-label="设置分类">
+        <ul class="settings-nav__list" id="settings-tabs" role="tablist" aria-orientation="vertical">
+          <li>
+            <button type="button" class="settings-nav__item is-active" id="tab-audio" role="tab" aria-selected="true" aria-controls="section-audio" data-section="audio">
+              <svg class="icon" aria-hidden="true"><use href="#i-sliders"></use></svg>音频
+            </button>
+          </li>
+          <li>
+            <button type="button" class="settings-nav__item" id="tab-playback" role="tab" aria-selected="false" aria-controls="section-playback" data-section="playback" tabindex="-1">
+              <svg class="icon" aria-hidden="true"><use href="#i-volume"></use></svg>播放
+            </button>
+          </li>
+          <li>
+            <button type="button" class="settings-nav__item" id="tab-shortcuts" role="tab" aria-selected="false" aria-controls="section-shortcuts" data-section="shortcuts" tabindex="-1">
+              <svg class="icon" aria-hidden="true"><use href="#i-keyboard"></use></svg>快捷键
+            </button>
+          </li>
+          <li>
+            <button type="button" class="settings-nav__item" id="tab-about" role="tab" aria-selected="false" aria-controls="section-about" data-section="about" tabindex="-1">
+              <svg class="icon" aria-hidden="true"><use href="#i-doc"></use></svg>关于
+            </button>
+          </li>
+        </ul>
+        <p class="settings-nav__hint">设置自动保存在浏览器本机，不会上传服务器。</p>
+      </nav>
+
+      <div class="settings-content">
+        <!-- 音频 -->
+        <section class="card settings-section" id="section-audio" role="tabpanel" aria-labelledby="tab-audio" data-section="audio">
+          <div class="settings-section__head">
+            <div class="settings-section__icon" aria-hidden="true"><svg class="icon icon--lg"><use href="#i-sliders"></use></svg></div>
+            <div>
+              <h2 class="settings-section__title">音频</h2>
+              <p class="settings-section__desc">采集设备、编码质量与前处理。修改后立即应用到下一次语音发送。</p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="set-input-device">输入设备</label>
+            <div class="select-shell">
+              <select class="select" id="set-input-device" data-setting="inputDevice">
+                <option value="">系统默认麦克风</option>
+              </select>
+              <svg class="icon select-shell__chevron" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </div>
+            <p class="field__hint" id="input-device-hint">设备名称需要麦克风权限后才会显示。</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="set-output-device">输出设备</label>
+            <div class="select-shell">
+              <select class="select" id="set-output-device" data-setting="outputDevice">
+                <option value="">系统默认扬声器</option>
+              </select>
+              <svg class="icon select-shell__chevron" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </div>
+            <div class="field__inline">
+              <p class="field__hint">输出设备切换依赖浏览器支持。</p>
+              <button type="button" class="btn btn--ghost btn--small" id="btn-refresh-devices">
+                <svg class="icon icon--sm" aria-hidden="true"><use href="#i-refresh"></use></svg>刷新设备
+              </button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field__label" id="codec-label">编码格式</span>
+            <div class="segmented" role="radiogroup" aria-labelledby="codec-label">
+              <button type="button" class="segmented__item is-active" role="radio" aria-checked="true" data-choice-setting="codec" data-value="voice">Opus Voice</button>
+              <button type="button" class="segmented__item" role="radio" aria-checked="false" data-choice-setting="codec" data-value="music" tabindex="-1">Opus Music</button>
+            </div>
+            <p class="field__hint">Voice 适合实时语音；Music 使用更高码率与音乐优化。</p>
+          </div>
+
+          <div class="field">
+            <div class="field__head">
+              <label class="field__label" for="set-quality">编码质量</label>
+              <output class="value-badge" id="quality-output" for="set-quality">6</output>
+            </div>
+            <input class="range" id="set-quality" type="range" min="0" max="10" step="1" value="6" data-setting="quality">
+            <p class="field__hint" id="quality-hint">平衡：适合大多数网络环境。</p>
+          </div>
+
+          <div class="settings-group">
+            <p class="settings-group__title">前处理</p>
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="toggle-row__title" id="lbl-aec">回声消除（AEC）</p>
+                <p class="toggle-row__desc">消除扬声器声音被麦克风再次采集的回声。</p>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-labelledby="lbl-aec" data-toggle-setting="aec"><span class="toggle__thumb"></span></button>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="toggle-row__title" id="lbl-ns">噪声抑制</p>
+                <p class="toggle-row__desc">压制风扇、键盘等平稳背景噪声。</p>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-labelledby="lbl-ns" data-toggle-setting="noiseSuppression"><span class="toggle__thumb"></span></button>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="toggle-row__title" id="lbl-vad">语音活动检测（VAD）</p>
+                <p class="toggle-row__desc">只在检测到人声时发送语音，节省带宽。</p>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-labelledby="lbl-vad" data-toggle-setting="vad"><span class="toggle__thumb"></span></button>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="toggle-row__title" id="lbl-agc">自动增益控制（AGC）</p>
+                <p class="toggle-row__desc">自动把偏小的声音拉到合适音量。</p>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="false" aria-labelledby="lbl-agc" data-toggle-setting="agc"><span class="toggle__thumb"></span></button>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="toggle-row__title" id="lbl-typing">打字时抑制麦克风</p>
+                <p class="toggle-row__desc">键盘敲击时临时降低采集灵敏度。</p>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="false" aria-labelledby="lbl-typing" data-toggle-setting="typingSuppression"><span class="toggle__thumb"></span></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 播放 -->
+        <section class="card settings-section" id="section-playback" role="tabpanel" aria-labelledby="tab-playback" data-section="playback" hidden>
+          <div class="settings-section__head">
+            <div class="settings-section__icon" aria-hidden="true"><svg class="icon icon--lg"><use href="#i-volume"></use></svg></div>
+            <div>
+              <h2 class="settings-section__title">播放</h2>
+              <p class="settings-section__desc">输出音量与听感调整。舒适噪声让安静时不再死寂。</p>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="field__head">
+              <label class="field__label" for="set-master-volume">主音量</label>
+              <output class="value-badge" id="master-volume-output" for="set-master-volume">80%</output>
+            </div>
+            <input class="range" id="set-master-volume" type="range" min="0" max="100" step="1" value="80" data-setting="masterVolume">
+            <p class="field__hint">影响所有客户端语音的最终输出音量。</p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="set-client-select">单客户端音量</label>
+            <div class="select-shell">
+              <select class="select" id="set-client-select">
+                <option value="">选择客户端后调整</option>
+              </select>
+              <svg class="icon select-shell__chevron" aria-hidden="true"><use href="#i-chevron-down"></use></svg>
+            </div>
+            <div class="field__head field__head--range">
+              <span class="field__hint" id="client-volume-target">未选择客户端</span>
+              <output class="value-badge" id="client-volume-output" for="set-client-volume">100%</output>
+            </div>
+            <input class="range" id="set-client-volume" type="range" min="0" max="200" step="5" value="100" disabled>
+            <p class="field__hint">仅影响本机播放，不改变服务器上的客户端设置。</p>
+          </div>
+
+          <div class="settings-group">
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="toggle-row__title" id="lbl-comfort">舒适噪声</p>
+                <p class="toggle-row__desc">无人说话时播放极轻的环境底噪，避免误以为断线。</p>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-labelledby="lbl-comfort" data-toggle-setting="comfortNoise"><span class="toggle__thumb"></span></button>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-row__text">
+                <p class="toggle-row__title" id="lbl-ducking">语音时自动压低其他声音（Ducking）</p>
+                <p class="toggle-row__desc">收到他人语音时自动降低其他音频音量。</p>
+              </div>
+              <button type="button" class="toggle" role="switch" aria-checked="true" aria-labelledby="lbl-ducking" data-toggle-setting="ducking"><span class="toggle__thumb"></span></button>
+            </div>
+            <div class="field" id="ducking-amount-field">
+              <div class="field__head">
+                <label class="field__label" for="set-ducking-amount">Ducking 降低幅度</label>
+                <output class="value-badge" id="ducking-output" for="set-ducking-amount">40%</output>
+              </div>
+              <input class="range" id="set-ducking-amount" type="range" min="10" max="90" step="5" value="40" data-setting="duckingAmount">
+            </div>
+          </div>
+        </section>
+
+        <!-- 快捷键 -->
+        <section class="card settings-section" id="section-shortcuts" role="tabpanel" aria-labelledby="tab-shortcuts" data-section="shortcuts" hidden>
+          <div class="settings-section__head">
+            <div class="settings-section__icon" aria-hidden="true"><svg class="icon icon--lg"><use href="#i-keyboard"></use></svg></div>
+            <div>
+              <h2 class="settings-section__title">快捷键</h2>
+              <p class="settings-section__desc">点击按键框后直接按下新按键；按 Esc 取消。输入文字时快捷键自动让位。</p>
+            </div>
+          </div>
+
+          <div class="shortcut-row">
+            <div class="shortcut-row__text">
+              <p class="toggle-row__title">按住说话（PTT）</p>
+              <p class="toggle-row__desc">按住时上传麦克风，松开停止。</p>
+            </div>
+            <button type="button" class="kbd-btn" id="set-ptt-key" data-shortcut="pttKey" aria-label="设置按住说话快捷键">空格</button>
+          </div>
+          <div class="shortcut-row">
+            <div class="shortcut-row__text">
+              <p class="toggle-row__title">切换麦克风静音</p>
+              <p class="toggle-row__desc">在任何页面切换自己的静音状态。</p>
+            </div>
+            <button type="button" class="kbd-btn" id="set-mute-key" data-shortcut="muteKey" aria-label="设置静音快捷键">未设置</button>
+          </div>
+          <div class="shortcut-row">
+            <div class="shortcut-row__text">
+              <p class="toggle-row__title">切换耳聋</p>
+              <p class="toggle-row__desc">切换耳机输出；耳聋也会停止发送语音。</p>
+            </div>
+            <button type="button" class="kbd-btn" id="set-deafen-key" data-shortcut="deafenKey" aria-label="设置耳聋快捷键">未设置</button>
+          </div>
+
+          <div class="field__inline">
+            <p class="field__hint">快捷键保存于本机，不会同步到其他设备。</p>
+            <button type="button" class="btn btn--ghost btn--small" id="btn-reset-shortcuts">恢复默认</button>
+          </div>
+        </section>
+
+        <!-- 关于 -->
+        <section class="card settings-section" id="section-about" role="tabpanel" aria-labelledby="tab-about" data-section="about" hidden>
+          <div class="settings-section__head">
+            <div class="settings-section__icon" aria-hidden="true"><svg class="icon icon--lg"><use href="#i-doc"></use></svg></div>
+            <div>
+              <h2 class="settings-section__title">关于</h2>
+              <p class="settings-section__desc">客户端信息与诊断数据。诊断只在本机生成，不会上传。</p>
+            </div>
+          </div>
+
+          <dl class="about-grid">
+            <dt>客户端</dt><dd>ts3-compat Web 前端 · Fluent 设计规范</dd>
+            <dt>版本</dt><dd>0.1.0</dd>
+            <dt>协议契约</dt><dd>docs/api.md · WebSocket <code>op</code> / <code>ev</code></dd>
+            <dt>桥接地址</dt><dd id="about-endpoint">ws://127.0.0.1:8787/ws</dd>
+            <dt>当前模式</dt><dd id="about-mode">—</dd>
+            <dt>音频引擎</dt><dd id="about-audio">未初始化</dd>
+            <dt>视口</dt><dd id="about-viewport">—</dd>
+            <dt>布局诊断</dt><dd id="about-overflow">—</dd>
+            <dt>最近错误</dt><dd id="about-errors">0 个</dd>
+          </dl>
+
+          <div class="settings-group">
+            <p class="settings-group__title">诊断</p>
+            <p class="field__hint">使用 <code>?mock=1</code> 打开内置演示数据；演示模式不会连接真实服务器。页面会在本机记录最近 20 条运行时错误供排查。</p>
+          </div>
+
+          <div class="field__inline">
+            <button type="button" class="btn btn--secondary" id="btn-clear-settings">
+              <svg class="icon" aria-hidden="true"><use href="#i-refresh"></use></svg>
+              清除本地设置
+            </button>
+            <button type="button" class="btn btn--secondary" id="btn-back-to-connect">
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"></use></svg>
+              返回连接页
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Acrylic 右键菜单 ===================== -->
+  <div class="menu-layer" id="menu-layer" hidden>
+    <div class="menu" id="menu" role="menu" tabindex="-1" aria-label="上下文菜单"></div>
+  </div>
+
+  <!-- ===================== 对话框 ===================== -->
+  <div class="modal-layer" id="modal-layer" hidden>
+    <div class="modal-backdrop" id="modal-backdrop" aria-hidden="true"></div>
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <header class="modal__head">
+        <h2 class="modal__title" id="modal-title">标题</h2>
+        <button type="button" class="icon-btn modal__close" id="modal-close" aria-label="关闭对话框" title="关闭">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+        </button>
+      </header>
+      <div class="modal__body" id="modal-body"></div>
+      <footer class="modal__actions" id="modal-actions"></footer>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="noscript">此客户端需要启用 JavaScript 才能运行。</div>
+  </noscript>
+</body>
+</html>
